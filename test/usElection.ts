@@ -120,7 +120,14 @@ describe("USElection", function () {
 
   it("Should throw on trying to end election when elections are already ended", async function () {
     await loadFixture(deployFixture);
+
+    expect(await usElection.electionEnded()).to.equal(false);
+
+    const endElectionTx = await usElection.endElection();
+    await endElectionTx.wait()
     await usElection.electionEnded();
+
+    expect(await usElection.electionEnded()).to.equal(true);
 
     expect(usElection.endElection()).to.be.revertedWith('Elections already ended');
   });
